@@ -74,34 +74,52 @@ Client-server chat applications are versatile tools that facilitate real-time co
 Client-server chat applications are foundational to real-time communication over networks. They incorporate principles of socket programming, communication protocols, and security mechanisms to provide a seamless user experience. Understanding the basics of client-server chat applications is essential for developers involved in networked application development, as they form the backbone of various collaborative communication systems. As technology evolves, chat applications continue to adapt, incorporating new features and technologies to enhance user interaction and connectivity.
 
 ## Program
+## Server
 ```
-client side:
-  i=input("Enter a data: ") 
-  c.send(i.encode()) 
-  ack=c.recv(1024).decode() 
-  if ack: 
-    print(ack) 
-    continue 
-  else: 
-    c.close() 
-    break
-
-server side:
-import socket 
-s=socket.socket() 
-s.connect(('localhost',8000)) 
-while True: 
-  print(s.recv(1024).decode()) 
-  s.send("Acknowledgement Recived".encode())
+import socket
+s = socket.socket()
+s.bind(('localhost', 8000))
+s.listen(5)
+print("Server waiting for client...")
+c, addr = s.accept()
+print("Client connected:", addr)
+while True:
+    msg = input("Server: ")
+    c.send(msg.encode())
+    if msg.lower() == "exit":
+        break
+    data = c.recv(1024).decode()
+    if not data or data.lower() == "exit":
+        print("Client disconnected")
+        break
+    print("Client:", data)
+c.close()
+s.close()
 ```
-
+## Client
+```
+import socket
+s = socket.socket()
+s.connect(('localhost', 8000))
+print("Connected to server")
+while True:
+    data = s.recv(1024).decode()
+    if not data or data.lower() == "exit":
+        print("Server disconnected")
+        break
+    print("Server:", data)
+    msg = input("Client: ")
+    s.send(msg.encode())
+    if msg.lower() == "exit":
+        break
+s.close()
+```
 ## Output
 
-<img width="533" height="252" alt="Screenshot 2026-11-22 135151" src="https://github.com/user-attachments/assets/2e1462f9-09a6-42a0-a45e-a72008969d1f" />
+<img width="723" height="213" alt="image" src="https://github.com/user-attachments/assets/4954c9c2-4a79-4792-955f-295a1c784a92" />
 
-<img width="522" height="195" alt="Screenshot 2026-11-22 135202" src="https://github.com/user-attachments/assets/3cb2f4cf-25b2-41a7-b963-05d6f3e27887" />
+<img width="762" height="202" alt="image" src="https://github.com/user-attachments/assets/b040b0c9-e1d7-4dea-aa11-1d339cafbf72" />
 
 ## Result:
 
 Thus the study on Client Server Chat Applications has been performed.
-
